@@ -34,6 +34,14 @@ public enum PieceType {
         return this.moveStrategy.generateMovablePositions(currentPosition);
     }
 
+    public boolean isBlackPawn() {
+        return this == BLACK_PAWN;
+    }
+
+    public boolean isWhitePawn() {
+        return this == WHITE_PAWN;
+    }
+
     public double getScore() {
         return score;
     }

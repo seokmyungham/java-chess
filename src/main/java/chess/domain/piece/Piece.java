@@ -25,27 +25,22 @@ public class Piece {
     }
 
     public boolean isEnemy(Piece piece) {
-        return isNotSameColor(piece.color);
+        return !isSameColor(piece.color);
     }
 
     public boolean isSameColor(Color color) {
         return this.color == color;
     }
 
-    public boolean isNotSameColor(Color color) {
-        return !isSameColor(color);
-    }
-
     public boolean isKing() {
         return this.pieceType == PieceType.KING;
     }
 
-    public double getScore() {
-        return pieceType.getScore();
-    }
-
-    public Color getColor() {
-        return color;
+    public boolean isPawn(Color color) {
+        if (color == Color.BLACK) {
+            return pieceType.isBlackPawn();
+        }
+        return pieceType.isWhitePawn();
     }
 
     public boolean isPawnAttackPossible(Direction direction) {
@@ -70,6 +65,14 @@ public class Piece {
 
     public PieceType getPieceType() {
         return pieceType;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public double getScore() {
+        return pieceType.getScore();
     }
 
     @Override
