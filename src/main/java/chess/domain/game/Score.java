@@ -2,7 +2,7 @@ package chess.domain.game;
 
 import java.util.Objects;
 
-public final class Score {
+public class Score {
     private final Double score;
 
     public Score(Double score) {
