@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class ScoreCalculator {
 
-    private static final int PWAN_DUPLICATE_THRESHOLD = 2;
-    private static final double PWAN_DEDUCTION_SCORE = 0.5;
+    private static final int PAWN_DUPLICATE_THRESHOLD = 2;
+    private static final double PAWN_DEDUCTION_SCORE = 0.5;
 
     public static Map<Color, Score> calculateTotalScore(Map<Position, Piece> board) {
         return Map.of(
@@ -35,8 +35,8 @@ public class ScoreCalculator {
     private static double calculatePawnScore(Map<Position, Piece> board, Color color) {
         Map<Column, Long> pawnCountByColumn = countPawnByColumn(board, color);
         return pawnCountByColumn.values().stream()
-                .filter(pawnCount -> pawnCount >= PWAN_DUPLICATE_THRESHOLD)
-                .mapToDouble(pawnCount -> pawnCount * PWAN_DEDUCTION_SCORE)
+                .filter(pawnCount -> pawnCount >= PAWN_DUPLICATE_THRESHOLD)
+                .mapToDouble(pawnCount -> pawnCount * PAWN_DEDUCTION_SCORE)
                 .sum();
     }
 
