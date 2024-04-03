@@ -9,7 +9,7 @@ public interface RoomRepository {
 
     List<String> findAllRoomNames();
 
-    boolean existsRoomName(RoomName roomName);
+    boolean isExistsRoomName(RoomName roomName);
 
     void saveRoom(RoomName roomName);
 

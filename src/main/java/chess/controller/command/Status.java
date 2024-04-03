@@ -1,7 +1,7 @@
 package chess.controller.command;
 
 import chess.controller.State;
-import chess.service.BoardService;
+import chess.domain.game.ChessGame;
 import chess.service.GameService;
 import chess.view.OutputView;
 import java.util.List;
@@ -17,8 +17,8 @@ public class Status implements Command {
     }
 
     @Override
-    public State execute(GameService gameService, BoardService boardService, Long roomId) {
-        OutputView.printTeamScore(gameService.generateGameResult(roomId));
+    public State execute(GameService gameService, ChessGame chessGame, Long roomId) {
+        OutputView.printTeamScore(chessGame.generateGameResult());
         return State.RUNNING;
     }
 }

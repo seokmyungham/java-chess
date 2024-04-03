@@ -2,8 +2,10 @@ package chess.controller;
 
 import chess.controller.command.Command;
 import chess.controller.command.CommandRouter;
+import chess.domain.board.Board;
+import chess.domain.game.ChessGame;
 import chess.domain.game.Room;
-import chess.service.BoardService;
+import chess.domain.piece.Color;
 import chess.service.GameService;
 import chess.view.InputView;
 import chess.view.OutputView;
@@ -11,41 +13,46 @@ import chess.view.OutputView;
 public class ChessGameController {
 
     private final GameService gameService;
-    private final BoardService boardService;
 
-    public ChessGameController(GameService gameService, BoardService boardService) {
+    public ChessGameController(GameService gameService) {
         this.gameService = gameService;
-        this.boardService = boardService;
     }
 
     public void run() {
-        OutputView.printRoomNames(gameService.findAllRoomNames());
-        Room room = createRoom();
-        OutputView.printStartMessage(room.getName());
-        process(gameService, boardService, room.getId());
+        OutputView.printSavedRoomNames(gameService.findAllRoomNames());
+        Room room = loadRoom();
+        OutputView.printEnterRoomMessage(room.getName());
+        ChessGame chessGame = createChessGame(room.getId());
+        process(room.getId(), chessGame);
     }
 
-    private Room createRoom() {
+    private Room loadRoom() {
         try {
             String input = InputView.readRoomName();
             return gameService.loadRoom(input);
         } catch (RuntimeException error) {
             OutputView.printError(error);
-            return createRoom();
+            return loadRoom();
         }
     }
 
-    private void process(GameService gameService, BoardService boardService, Long roomId) {
+    private ChessGame createChessGame(Long roomId) {
+        Color turn = gameService.findTurnByRoomId(roomId);
+        Board board = gameService.loadBoard(roomId);
+        return new ChessGame(board, turn);
+    }
+
+    private void process(Long roomId, ChessGame chessGame) {
         State state = State.RUNNING;
         do {
-            state = executeCommand(gameService, boardService, state, roomId);
+            state = executeCommand(state, chessGame, roomId);
         } while (state != State.END);
     }
 
-    private State executeCommand(GameService gameService, BoardService boardService, State state, Long roomId) {
+    private State executeCommand(State state, ChessGame chessGame, Long roomId) {
         try {
             Command command = CommandRouter.findCommendByInput(InputView.readCommend());
-            return command.execute(gameService, boardService, roomId);
+            return command.execute(gameService, chessGame, roomId);
         } catch (RuntimeException error) {
             OutputView.printError(error);
             return state;

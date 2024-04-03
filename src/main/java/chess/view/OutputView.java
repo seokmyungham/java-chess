@@ -16,7 +16,7 @@ public class OutputView {
 
     private static final String EMPTY_BOARD = ". . . . . . . .";
 
-    public static void printRoomNames(List<String> roomNames) {
+    public static void printSavedRoomNames(List<String> roomNames) {
         System.out.println("체스 게임을 시작합니다.\n");
         System.out.println("현재 저장된 체스 게임 방 목록입니다.");
 
@@ -32,7 +32,7 @@ public class OutputView {
         System.out.println("새로 시작하려면 새로운 방 이름을 입력해주세요.");
     }
 
-    public static void printStartMessage(String roomName) {
+    public static void printEnterRoomMessage(String roomName) {
         System.out.println(roomName + " 체스 방에 입장하였습니다.");
         System.out.println("\n게임 시작 : start");
         System.out.println("게임 종료 : end");

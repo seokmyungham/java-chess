@@ -4,7 +4,7 @@ import chess.controller.State;
 import chess.domain.board.position.Column;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Row;
-import chess.service.BoardService;
+import chess.domain.game.ChessGame;
 import chess.service.GameService;
 import chess.service.dto.ChessGameResult;
 import chess.view.OutputView;
@@ -18,15 +18,15 @@ public class Move implements Command {
     private static final Pattern POSITION_REGEX = Pattern.compile(""
             + "move\\s+([a-h][1-8])\\s+([a-h][1-8])");
 
-    private final Position from;
-    private final Position to;
+    private final Position source;
+    private final Position destination;
 
     public Move(List<String> commandInput) {
         validateMoveCommandPattern(commandInput);
         String fromPosition = commandInput.get(1);
         String toPosition = commandInput.get(2);
-        this.from = createPosition(fromPosition.substring(0, 1), fromPosition.substring(1, 2));
-        this.to = createPosition(toPosition.substring(0, 1), toPosition.substring(1, 2));
+        this.source = createPosition(fromPosition.substring(0, 1), fromPosition.substring(1, 2));
+        this.destination = createPosition(toPosition.substring(0, 1), toPosition.substring(1, 2));
     }
 
     private void validateMoveCommandPattern(List<String> commandInput) {
@@ -37,20 +37,16 @@ public class Move implements Command {
     }
 
     @Override
-    public State execute(GameService gameService, BoardService boardService, Long roomId) {
-        if (boardService.isCheckmate(to, roomId)) {
-            moveAndPrintBoard(gameService, boardService, roomId);
-            ChessGameResult chessGameResult = gameService.generateGameResult(roomId);
+    public State execute(GameService gameService, ChessGame chessGame, Long roomId) {
+        chessGame.processTurn(source, destination);
+        gameService.processTurn(source, destination, roomId);
+        OutputView.printBoard(chessGame.getBoard());
+        if (chessGame.isKingAliveAlone()) {
+            ChessGameResult chessGameResult = chessGame.generateGameResult();
             OutputView.printChessGameResult(chessGameResult);
             return State.END;
         }
-        moveAndPrintBoard(gameService, boardService, roomId);
         return State.RUNNING;
-    }
-
-    private void moveAndPrintBoard(GameService gameService, BoardService boardService, Long roomId) {
-        boardService.movePiece(from, to, roomId);
-        OutputView.printBoard(boardService.getAllPieces(roomId));
     }
 
     private Position createPosition(String requestColumn, String requestRow) {

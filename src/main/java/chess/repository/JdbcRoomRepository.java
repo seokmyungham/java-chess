@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepositoryImpl implements RoomRepository{
+public class JdbcRoomRepository implements RoomRepository{
 
     private final DBConnection dbConnection = new DBConnection();
 
@@ -32,7 +32,7 @@ public class RoomRepositoryImpl implements RoomRepository{
     }
 
     @Override
-    public boolean existsRoomName(RoomName roomName) {
+    public boolean isExistsRoomName(RoomName roomName) {
         List<Boolean> existsRoom = new ArrayList<>();
         final String query = "SELECT EXISTS ("
                 + "SELECT 1 FROM room WHERE name = ?) AS exists_room";
