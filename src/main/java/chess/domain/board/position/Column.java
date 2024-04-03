@@ -26,7 +26,7 @@ public enum Column {
         return Arrays.stream(values())
                 .filter(column -> column.index == this.index + distance)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("일치하는 Column 가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("다음 위치로 이동할 수 있는 Column이 존재하지 않습니다."));
     }
 
     public boolean isNextInRange(int distance) {
