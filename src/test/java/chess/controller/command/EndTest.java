@@ -5,12 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.controller.State;
+import chess.domain.board.Board;
+import chess.domain.board.BoardFactory;
+import chess.domain.game.ChessGame;
+import chess.domain.piece.Color;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
 import chess.repository.fake.FakeBoardRepository;
 import chess.repository.fake.FakeRoomRepository;
-import chess.service.BoardService;
 import chess.service.GameService;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,9 +51,9 @@ class EndTest {
     void executeTest() {
         End end = new End(List.of("end"));
         GameService gameService = new GameService(roomRepository, boardRepository);
-        BoardService boardService = new BoardService(roomRepository, boardRepository);
-
-        State gameState = end.execute(gameService, boardService, 0L);
+        Board board = new Board(new HashMap<>());
+        BoardFactory.initialize(board);
+        State gameState = end.execute(gameService, new ChessGame(board, Color.WHITE), 0L);
 
         assertThat(gameState).isEqualTo(State.END);
     }
