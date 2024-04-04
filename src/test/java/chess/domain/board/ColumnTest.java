@@ -30,7 +30,8 @@ class ColumnTest {
         Column column = Column.D;
 
         assertThatThrownBy(() -> column.calculateNextColumn(-5))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("다음 위치로 이동할 수 있는 Column이 존재하지 않습니다.");
     }
 
 
