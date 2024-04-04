@@ -30,7 +30,7 @@ class RowTest {
 
         assertThatThrownBy(() -> row.calculateNextRow(-5))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("다음 위치로 이동할 수 있는 열이 없습니다.");
+                .hasMessage("다음 위치로 이동할 수 있는 Row가 존재하지 않습니다.");
     }
 
     @Test
@@ -62,6 +62,6 @@ class RowTest {
     void findByIndexFailTest() {
         assertThatThrownBy(() -> Row.findByIndex(-1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("열과 일치하는 인덱스가 없습니다.");
+                .hasMessage("인덱스와 매칭되는 Row를 찾을 수 없어 Row로 변환할 수 없습니다.");
     }
 }

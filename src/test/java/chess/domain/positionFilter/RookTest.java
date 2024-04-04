@@ -2,6 +2,7 @@ package chess.domain.positionFilter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.board.Board;
 import chess.domain.board.position.Column;
 import chess.domain.board.position.Direction;
 import chess.domain.board.position.Position;
@@ -10,9 +11,6 @@ import chess.domain.game.PositionsFilter;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
-import chess.repository.fake.BlackPieceRepository;
-import chess.repository.fake.NotExistsPieceRepository;
-import chess.repository.fake.WhitePieceRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -22,15 +20,14 @@ import org.junit.jupiter.api.Test;
 class RookTest {
 
     @Test
-    @DisplayName("해당 포지션이 비어있을 시 이동 가능한 포지션에 모두 포함되어야 한다.")
+    @DisplayName("포지션이 비어있을 시 이동 가능한 포지션에 모두 포함되어야 한다.")
     void positionEmptyAllMovablePositionsIncludedTest() {
-        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
         Position position = new Position(Row.FIVE, Column.D);
-        Map<Direction, Queue<Position>> candidateAllPositions = piece.generateAllDirectionPositions(position);
-        PositionsFilter positionsFilter = new PositionsFilter(new NotExistsPieceRepository(),
-                candidateAllPositions);
+        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
+        Map<Direction, Queue<Position>> candidatePositions = piece.generateAllDirectionPositions(position);
+        Board board = new Board(Map.of(position, piece));
 
-        List<Position> movablePositions = positionsFilter.generateValidPositions(piece, 0L);
+        List<Position> movablePositions = PositionsFilter.generateValidPositions(candidatePositions, piece, board);
 
         assertThat(movablePositions).containsExactlyInAnyOrder(
                 new Position(Row.SIX, Column.D),
@@ -54,34 +51,48 @@ class RookTest {
     }
 
     @Test
-    @DisplayName("해당 포지션에 상대 기물이 존재하면 이동할 수 있는 위치에 포함되어야 한다.")
+    @DisplayName("포지션에 상대 기물이 존재하면 이동할 수 있는 위치에 포함되어야 한다.")
     void positionWithOpponentPiecesTest() {
-        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
         Position position = new Position(Row.FIVE, Column.D);
-        Map<Direction, Queue<Position>> candidateAllPositions = piece.generateAllDirectionPositions(position);
-        PositionsFilter positionsFilter = new PositionsFilter(new BlackPieceRepository(),
-                candidateAllPositions);
+        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
+        Map<Direction, Queue<Position>> candidatePositions = piece.generateAllDirectionPositions(position);
+        Board board = new Board(
+                Map.of(
+                        position, piece,
+                        new Position(Row.SIX, Column.D), new Piece(PieceType.BISHOP, Color.BLACK),
+                        new Position(Row.FOUR, Column.D), new Piece(PieceType.KNIGHT, Color.BLACK),
+                        new Position(Row.FIVE, Column.C), new Piece(PieceType.KNIGHT, Color.BLACK),
+                        new Position(Row.FIVE, Column.E), new Piece(PieceType.BISHOP, Color.BLACK)
+                )
+        );
 
-        List<Position> movablePositions = positionsFilter.generateValidPositions(piece, 0L);
+        List<Position> movablePositions = PositionsFilter.generateValidPositions(candidatePositions, piece, board);
 
         assertThat(movablePositions).containsExactlyInAnyOrder(
                 new Position(Row.SIX, Column.D),
-                new Position(Row.FIVE, Column.E),
                 new Position(Row.FOUR, Column.D),
-                new Position(Row.FIVE, Column.C)
+                new Position(Row.FIVE, Column.C),
+                new Position(Row.FIVE, Column.E)
         );
     }
 
     @Test
-    @DisplayName("해당 포지션이 우리팀 기물일 시 이동가능한 위치에 포함되어서는 안된다.")
+    @DisplayName("포지션에 우리팀 기물이 존재하면 이동가능한 위치에 포함되면 안된다.")
     void positionWithOwnPiecesTest() {
-        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
         Position position = new Position(Row.FIVE, Column.D);
-        Map<Direction, Queue<Position>> candidateAllPositions = piece.generateAllDirectionPositions(position);
-        PositionsFilter positionsFilter = new PositionsFilter(new WhitePieceRepository(),
-                candidateAllPositions);
+        Piece piece = new Piece(PieceType.ROOK, Color.WHITE);
+        Map<Direction, Queue<Position>> candidatePositions = piece.generateAllDirectionPositions(position);
+        Board board = new Board(
+                Map.of(
+                        position, piece,
+                        new Position(Row.SIX, Column.D), new Piece(PieceType.BISHOP, Color.WHITE),
+                        new Position(Row.FOUR, Column.D), new Piece(PieceType.KNIGHT, Color.WHITE),
+                        new Position(Row.FIVE, Column.C), new Piece(PieceType.KNIGHT, Color.WHITE),
+                        new Position(Row.FIVE, Column.E), new Piece(PieceType.BISHOP, Color.WHITE)
+                )
+        );
 
-        List<Position> movablePositions = positionsFilter.generateValidPositions(piece, 0L);
+        List<Position> movablePositions = PositionsFilter.generateValidPositions(candidatePositions, piece, board);
 
         assertThat(movablePositions).isEmpty();
     }
