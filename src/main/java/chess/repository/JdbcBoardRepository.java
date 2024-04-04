@@ -17,7 +17,7 @@ public class JdbcBoardRepository implements BoardRepository {
 
     @Override
     public void savePiece(Piece piece, Position position, Long roomId) {
-        final String query = "INSERT INTO board(`row`, `column`, piece_type, piece_color, room_id) VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO board(`row`, `column`, piece_type, piece_color, room_id) VALUES(?, ?, ?, ?, ?)";
         processQuery(query, preparedStatement -> {
             preparedStatement.setInt(1, position.getRowIndex());
             preparedStatement.setString(2, position.getColumn().name());
@@ -30,7 +30,7 @@ public class JdbcBoardRepository implements BoardRepository {
 
     @Override
     public void deletePieceByPosition(Position position, Long roomId) {
-        final String query = "DELETE FROM board WHERE `row` = ? AND `column` = ? AND room_id = ?";
+        String query = "DELETE FROM board WHERE `row` = ? AND `column` = ? AND room_id = ?";
         processQuery(query, preparedStatement -> {
             preparedStatement.setInt(1, position.getRowIndex());
             preparedStatement.setString(2, position.getColumn().name());
@@ -42,7 +42,7 @@ public class JdbcBoardRepository implements BoardRepository {
     @Override
     public Piece findPieceByPosition(Position position, Long roomId) {
         List<Piece> pieces = new ArrayList<>();
-        final String query = "SELECT piece_type, piece_color FROM board WHERE `row` = ? AND `column` = ? AND room_id = ?";
+        String query = "SELECT piece_type, piece_color FROM board WHERE `row` = ? AND `column` = ? AND room_id = ?";
         processQuery(query, preparedStatement -> {
             preparedStatement.setInt(1, position.getRowIndex());
             preparedStatement.setString(2, position.getColumn().name());
@@ -82,8 +82,7 @@ public class JdbcBoardRepository implements BoardRepository {
     @Override
     public boolean isExistsPiece(Long roomId) {
         List<Boolean> existsPiece = new ArrayList<>();
-        final String query = "SELECT EXISTS ("
-                + "SELECT 1 FROM board WHERE room_id = ?) AS exists_piece";
+        String query = "SELECT EXISTS (SELECT 1 FROM board WHERE room_id = ?) AS exists_piece";
         processQuery(query, preparedStatement -> {
             preparedStatement.setLong(1, roomId);
             ResultSet rs = preparedStatement.executeQuery();
@@ -99,8 +98,8 @@ public class JdbcBoardRepository implements BoardRepository {
     }
 
     private void processQuery(String query, QueryProcessor queryProcessor) {
-        try (final Connection connection = dbConnection.getConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query);
+        try (Connection connection = dbConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             queryProcessor.process(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);

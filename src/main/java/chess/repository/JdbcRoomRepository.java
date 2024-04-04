@@ -34,8 +34,7 @@ public class JdbcRoomRepository implements RoomRepository{
     @Override
     public boolean isExistsRoomName(RoomName roomName) {
         List<Boolean> existsRoom = new ArrayList<>();
-        final String query = "SELECT EXISTS ("
-                + "SELECT 1 FROM room WHERE name = ?) AS exists_room";
+        String query = "SELECT EXISTS (SELECT 1 FROM room WHERE name = ?) AS exists_room";
         processQuery(query, preparedStatement -> {
             preparedStatement.setString(1, roomName.getValue());
             ResultSet rs = preparedStatement.executeQuery();
@@ -52,7 +51,7 @@ public class JdbcRoomRepository implements RoomRepository{
 
     @Override
     public void saveRoom(RoomName roomName) {
-        final String query = "INSERT INTO room(name, turn) VALUES(?, ?)";
+        String query = "INSERT INTO room(name, turn) VALUES(?, ?)";
         processQuery(query, preparedStatement -> {
             preparedStatement.setString(1, roomName.getValue());
             preparedStatement.setString(2, Color.WHITE.name());
@@ -62,7 +61,7 @@ public class JdbcRoomRepository implements RoomRepository{
 
     @Override
     public void updateRoomTurn(Color color, Long roomId) {
-        final String query = "UPDATE room SET turn = ? WHERE id = ?";
+        String query = "UPDATE room SET turn = ? WHERE id = ?";
         processQuery(query, preparedStatement -> {
             preparedStatement.setString(1, color.name());
             preparedStatement.setLong(2, roomId);
@@ -73,7 +72,7 @@ public class JdbcRoomRepository implements RoomRepository{
     @Override
     public Room findRoomByName(RoomName roomName) {
         List<Room> roomId = new ArrayList<>();
-        final String query = "SELECT * FROM room WHERE name = ?";
+        String query = "SELECT * FROM room WHERE name = ?";
         processQuery(query, preparedStatement -> {
             preparedStatement.setString(1, roomName.getValue());
             ResultSet rs = preparedStatement.executeQuery();
@@ -91,7 +90,7 @@ public class JdbcRoomRepository implements RoomRepository{
     @Override
     public Color findTurnById(Long roomId) {
         List<Color> color = new ArrayList<>();
-        final String query = "SELECT turn FROM room WHERE id = ?";
+        String query = "SELECT turn FROM room WHERE id = ?";
         processQuery(query, preparedStatement -> {
             preparedStatement.setLong(1, roomId);
             ResultSet rs = preparedStatement.executeQuery();
@@ -107,8 +106,8 @@ public class JdbcRoomRepository implements RoomRepository{
     }
 
     private void processQuery(String query, QueryProcessor queryProcessor) {
-        try (final Connection connection = dbConnection.getConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query);
+        try (Connection connection = dbConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             queryProcessor.process(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
