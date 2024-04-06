@@ -12,8 +12,6 @@ import java.util.Queue;
 
 public class ChessGame {
 
-    private static final int GAME_OVER_KING_COUNT = 1;
-
     private final Board board;
     private Color currentTurn;
 
@@ -47,15 +45,14 @@ public class ChessGame {
 
     public ChessGameResult generateGameResult() {
         Map<Color, Score> totalScore = ScoreCalculator.calculateTotalScore(board.getBoard());
-        List<Piece> kings = board.findKing();
-        if (kings.size() == GAME_OVER_KING_COUNT) {
-            return new ChessGameResult(Winner.selectWinnerByCheckmate(kings.get(0).getColor()), totalScore);
+        if (board.isGameOver()) {
+            return new ChessGameResult(Winner.selectWinnerByCheckmate(board.findWinnerColor()), totalScore);
         }
         return new ChessGameResult(Winner.selectWinnerByScore(totalScore), totalScore);
     }
 
-    public boolean isKingAliveAlone() {
-        return board.findKing().size() == GAME_OVER_KING_COUNT;
+    public boolean isGameOver() {
+        return board.isGameOver();
     }
 
     public Map<Position, Piece> getBoard() {

@@ -41,7 +41,7 @@ public class Move implements Command {
         chessGame.processTurn(source, destination);
         gameService.processTurn(source, destination, roomId);
         OutputView.printBoard(chessGame.getBoard());
-        if (chessGame.isKingAliveAlone()) {
+        if (chessGame.isGameOver()) {
             ChessGameResult chessGameResult = chessGame.generateGameResult();
             OutputView.printChessGameResult(chessGameResult);
             return State.END;

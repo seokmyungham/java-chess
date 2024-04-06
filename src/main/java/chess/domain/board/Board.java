@@ -1,6 +1,7 @@
 package chess.domain.board;
 
 import chess.domain.board.position.Position;
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import java.util.HashMap;
 import java.util.List;
@@ -8,13 +9,23 @@ import java.util.Map;
 
 public class Board {
 
+    private static final int GAME_OVER_KING_COUNT = 1;
+
     private final Map<Position, Piece> board;
 
     public Board(Map<Position, Piece> board) {
         this.board = board;
     }
 
-    public List<Piece> findKing() {
+    public boolean isGameOver() {
+        return findKing().size() == GAME_OVER_KING_COUNT;
+    }
+
+    public Color findWinnerColor() {
+        return findKing().get(0).getColor();
+    }
+
+    private List<Piece> findKing() {
         return board.values().stream()
                 .filter(Piece::isKing)
                 .toList();
