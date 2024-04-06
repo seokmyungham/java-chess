@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.position.Position;
+import chess.domain.game.ChessGame;
 import chess.domain.game.Room;
 import chess.domain.game.RoomName;
 import chess.domain.piece.Color;
@@ -36,7 +37,13 @@ public class GameService {
         return roomRepository.findRoomByName(roomName);
     }
 
-    public Board loadBoard(Long roomId) {
+    public ChessGame createChessGame(Long roomId) {
+        Color turn = roomRepository.findTurnById(roomId);
+        Board board = loadBoard(roomId);
+        return new ChessGame(board, turn);
+    }
+
+    private Board loadBoard(Long roomId) {
         if (boardRepository.isExistsPiece(roomId)) {
             Map<Position, Piece> board = boardRepository.findAllPieceByRoomId(roomId);
             return new Board(board);
@@ -62,10 +69,6 @@ public class GameService {
         boardRepository.deletePieceByPosition(source, roomId);
         boardRepository.deletePieceByPosition(destination, roomId);
         boardRepository.savePiece(piece, destination, roomId);
-    }
-
-    public Color findTurnByRoomId(Long roomId) {
-        return roomRepository.findTurnById(roomId);
     }
 
     public List<String> findAllRoomNames() {

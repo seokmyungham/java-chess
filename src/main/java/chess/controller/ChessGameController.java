@@ -2,10 +2,8 @@ package chess.controller;
 
 import chess.controller.command.Command;
 import chess.controller.command.CommandRouter;
-import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Room;
-import chess.domain.piece.Color;
 import chess.service.GameService;
 import chess.view.InputView;
 import chess.view.OutputView;
@@ -22,7 +20,7 @@ public class ChessGameController {
         OutputView.printSavedRoomNames(gameService.findAllRoomNames());
         Room room = loadRoom();
         OutputView.printEnterRoomMessage(room.getName());
-        ChessGame chessGame = createChessGame(room.getId());
+        ChessGame chessGame = gameService.createChessGame(room.getId());
         process(room.getId(), chessGame);
     }
 
@@ -34,12 +32,6 @@ public class ChessGameController {
             OutputView.printError(error);
             return loadRoom();
         }
-    }
-
-    private ChessGame createChessGame(Long roomId) {
-        Color turn = gameService.findTurnByRoomId(roomId);
-        Board board = gameService.loadBoard(roomId);
-        return new ChessGame(board, turn);
     }
 
     private void process(Long roomId, ChessGame chessGame) {
