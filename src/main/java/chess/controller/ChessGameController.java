@@ -43,7 +43,7 @@ public class ChessGameController {
 
     private State executeCommand(State state, ChessGame chessGame, Long roomId) {
         try {
-            Command command = CommandRouter.findCommendByInput(InputView.readCommend());
+            Command command = CommandRouter.findCommandByInput(InputView.readCommand());
             return command.execute(gameService, chessGame, roomId);
         } catch (RuntimeException error) {
             OutputView.printError(error);

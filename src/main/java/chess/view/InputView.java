@@ -12,7 +12,7 @@ public class InputView {
         return scanner.nextLine();
     }
 
-    public static List<String> readCommend() {
+    public static List<String> readCommand() {
         return Arrays.stream(scanner.nextLine().split(" ")).toList();
     }
 }

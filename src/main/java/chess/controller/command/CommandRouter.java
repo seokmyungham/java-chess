@@ -21,7 +21,7 @@ public enum CommandRouter {
         this.command = command;
     }
 
-    public static Command findCommendByInput(List<String> commandInput) {
+    public static Command findCommandByInput(List<String> commandInput) {
         if (commandInput == null || commandInput.size() == 0) {
             throw new IllegalArgumentException("빈 값 입력을 허용하지 않습니다.");
         }
