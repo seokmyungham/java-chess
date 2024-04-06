@@ -27,7 +27,7 @@ public enum RowMapper {
         return Arrays.stream(values())
                 .filter(row -> row.value.equals(value))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("입력과 일치하는 열이 존재하지 않습니다."))
+                .orElseThrow(() -> new IllegalArgumentException("입력과 일치하는 Row를 찾을 수 없어 Row로 변환할 수 없습니다."))
                 .row;
     }
 
@@ -35,7 +35,7 @@ public enum RowMapper {
         return Arrays.stream(values())
                 .filter(rowMapper -> rowMapper.row == row)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("열과 일치하는 인덱스가 존재하지 않습니다."))
+                .orElseThrow(() -> new IllegalArgumentException("Row와 일치하는 식별 값이 존재하지 않아 식별 값으로 변환할 수 없습니다."))
                 .arrayIndex;
     }
 }

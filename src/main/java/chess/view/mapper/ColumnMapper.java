@@ -25,7 +25,7 @@ public enum ColumnMapper {
         return Arrays.stream(values())
                 .filter(column -> column.value.equals(value))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("일치하는 Column 이 없습니다."))
+                .orElseThrow(() -> new IllegalArgumentException("입력과 일치하는 Column을 찾을 수 없어 Column으로 변환할 수 없습니다."))
                 .column;
     }
 }
