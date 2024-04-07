@@ -14,7 +14,6 @@ import chess.repository.RoomRepository;
 import chess.repository.fake.FakeBoardRepository;
 import chess.repository.fake.FakeRoomRepository;
 import chess.service.GameService;
-import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,8 +50,7 @@ class StatusTest {
     void executeTest() {
         Status status = new Status(List.of("status"));
         GameService gameService = new GameService(roomRepository, boardRepository);
-        Board board = new Board(new HashMap<>());
-        BoardFactory.initialize(board);
+        Board board = BoardFactory.createBoard();
         State gameState = status.execute(gameService, new ChessGame(board, Color.WHITE), 0L);
 
         assertThat(gameState).isEqualTo(State.RUNNING);

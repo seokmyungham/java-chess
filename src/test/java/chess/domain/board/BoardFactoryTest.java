@@ -10,7 +10,6 @@ import chess.domain.board.position.Row;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,8 +22,7 @@ public class BoardFactoryTest {
 
     @BeforeEach
     void setUp() {
-        Board board = new Board(new HashMap<>());
-        BoardFactory.initialize(board);
+        Board board = BoardFactory.createBoard();
         map = board.getBoard();
     }
 

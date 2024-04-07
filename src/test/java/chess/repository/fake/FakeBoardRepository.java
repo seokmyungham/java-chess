@@ -7,7 +7,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 import chess.repository.BoardRepository;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FakeBoardRepository implements BoardRepository {
@@ -27,8 +26,7 @@ public class FakeBoardRepository implements BoardRepository {
 
     @Override
     public Map<Position, Piece> findAllPieceByRoomId(Long roomId) {
-        Board board = new Board(new HashMap<>());
-        BoardFactory.initialize(board);
+        Board board = BoardFactory.createBoard();
         return board.getBoard();
     }
 

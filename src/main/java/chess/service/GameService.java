@@ -10,7 +10,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +51,7 @@ public class GameService {
     }
 
     private Board createNewBoard(Long roomId) {
-        Board board = new Board(new HashMap<>());
-        BoardFactory.initialize(board);
+        Board board = BoardFactory.createBoard();
         board.getBoard().forEach((position, piece) -> boardRepository.savePiece(piece, position, roomId));
         return board;
     }

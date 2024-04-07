@@ -6,25 +6,29 @@ import chess.domain.board.position.Row;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardFactory {
 
-    public static void initialize(Board board) {
+    public static Board createBoard() {
+        Map<Position, Piece> board = new HashMap<>();
         initializeBlackTeam(board);
         initializeWhiteTeam(board);
+        return new Board(board);
     }
 
-    private static void initializeBlackTeam(Board board) {
+    private static void initializeBlackTeam(Map<Position, Piece> board) {
         initializePawn(board, Row.SEVEN, Color.BLACK);
         initializeSpecialPiece(board, Row.EIGHT, Color.BLACK);
     }
 
-    private static void initializeWhiteTeam(Board board) {
+    private static void initializeWhiteTeam(Map<Position, Piece> board) {
         initializePawn(board, Row.TWO, Color.WHITE);
         initializeSpecialPiece(board, Row.ONE, Color.WHITE);
     }
 
-    private static void initializePawn(Board board, Row row, Color color) {
+    private static void initializePawn(Map<Position, Piece> board, Row row, Color color) {
         for (Column column : Column.values()) {
             Position position = new Position(row, column);
             if (color == Color.WHITE) {
@@ -36,7 +40,7 @@ public class BoardFactory {
         }
     }
 
-    private static void initializeSpecialPiece(Board board, Row row, Color color) {
+    private static void initializeSpecialPiece(Map<Position, Piece> board, Row row, Color color) {
         board.put(new Position(row, Column.A), new Piece(PieceType.ROOK, color));
         board.put(new Position(row, Column.H), new Piece(PieceType.ROOK, color));
 
