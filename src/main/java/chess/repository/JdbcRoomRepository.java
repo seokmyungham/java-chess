@@ -72,7 +72,7 @@ public class JdbcRoomRepository implements RoomRepository{
     @Override
     public Room findRoomByName(RoomName roomName) {
         List<Room> roomId = new ArrayList<>();
-        String query = "SELECT * FROM room WHERE name = ?";
+        String query = "SELECT * FROM room WHERE name = ? LIMIT 1";
         processQuery(query, preparedStatement -> {
             preparedStatement.setString(1, roomName.getValue());
             ResultSet rs = preparedStatement.executeQuery();
