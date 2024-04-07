@@ -52,7 +52,7 @@ public class GameService {
 
     private Board createNewBoard(Long roomId) {
         Board board = BoardFactory.createBoard();
-        board.getBoard().forEach((position, piece) -> boardRepository.savePiece(piece, position, roomId));
+        boardRepository.saveBoard(board.getBoard(), roomId);
         return board;
     }
 

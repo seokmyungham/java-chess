@@ -16,6 +16,31 @@ public class JdbcBoardRepository implements BoardRepository {
     private final DBConnection dbConnection = new DBConnection();
 
     @Override
+    public void saveBoard(Map<Position, Piece> board, Long roomId) {
+        String query = "INSERT INTO board(`row`, `column`, piece_type, piece_color, room_id) VALUES(?, ?, ?, ?, ?)";
+        processQuery(query, preparedStatement -> {
+            insertPiecesBatch(board, roomId, preparedStatement);
+            preparedStatement.executeBatch();
+            preparedStatement.clearBatch();
+        });
+    }
+
+    private void insertPiecesBatch(Map<Position, Piece> board, Long roomId,
+                                   PreparedStatement preparedStatement) throws SQLException {
+        for (Map.Entry<Position, Piece> entry : board.entrySet()) {
+            Position position = entry.getKey();
+            Piece piece = entry.getValue();
+            preparedStatement.setInt(1, position.getRowIndex());
+            preparedStatement.setString(2, position.getColumn().name());
+            preparedStatement.setString(3, piece.getPieceType().name());
+            preparedStatement.setString(4, piece.getColor().name());
+            preparedStatement.setLong(5, roomId);
+            preparedStatement.addBatch();
+            preparedStatement.clearParameters();
+        }
+    }
+
+    @Override
     public void savePiece(Piece piece, Position position, Long roomId) {
         String query = "INSERT INTO board(`row`, `column`, piece_type, piece_color, room_id) VALUES(?, ?, ?, ?, ?)";
         processQuery(query, preparedStatement -> {

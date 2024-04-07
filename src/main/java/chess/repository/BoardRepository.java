@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface BoardRepository {
 
+    void saveBoard(Map<Position, Piece> board, Long roomId);
+
     void savePiece(Piece piece, Position position, Long roomId);
 
     void deletePieceByPosition(Position position, Long roomId);

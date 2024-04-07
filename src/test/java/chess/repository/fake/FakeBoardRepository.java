@@ -12,6 +12,10 @@ import java.util.Map;
 public class FakeBoardRepository implements BoardRepository {
 
     @Override
+    public void saveBoard(Map<Position, Piece> board, Long roomId) {
+    }
+
+    @Override
     public void savePiece(Piece piece, Position position, Long roomId) {
     }
 
