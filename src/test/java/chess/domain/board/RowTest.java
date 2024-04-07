@@ -62,6 +62,6 @@ class RowTest {
     void findByIndexFailTest() {
         assertThatThrownBy(() -> Row.findByIndex(-1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("인덱스와 매칭되는 Row를 찾을 수 없어 Row로 변환할 수 없습니다.");
+                .hasMessage("변환하려는 값과 매칭되는 Row를 찾을 수 없어 Row로 변환할 수 없습니다.");
     }
 }
